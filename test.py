@@ -8,7 +8,8 @@ from environment import TreasureCube
 # you need to implement your agent based on one RL algorithm
 class RandomAgent(object):
     def __init__(self):
-        self.action_space = ['left','right','forward','backward','up','down'] # in TreasureCube
+        self.action_space = ['left', 'right', 'forward',
+                             'backward', 'up', 'down']  # in TreasureCube
         self.Q = []
 
     def take_action(self, state):
@@ -19,6 +20,7 @@ class RandomAgent(object):
     # you should pass arguments to the train function
     def train(self, state, action, next_state, reward):
         pass
+
 
 def test_cube(max_episode, max_step):
     env = TreasureCube(max_step=max_step)
@@ -34,12 +36,13 @@ def test_cube(max_episode, max_step):
             reward, terminate, next_state = env.step(action)
             episode_reward += reward
             # you can comment the following two lines, if the output is too much
-            env.render() # comment
-            print(f'step: {t}, action: {action}, reward: {reward}') # comment
+            env.render()  # comment
+            print(f'step: {t}, action: {action}, reward: {reward}')  # comment
             t += 1
             agent.train(state, action, next_state, reward)
             state = next_state
-        print(f'epsisode: {epsisode_num}, total_steps: {t} episode reward: {episode_reward}')
+        print(
+            f'epsisode: {epsisode_num}, total_steps: {t} episode reward: {episode_reward}')
 
 
 if __name__ == '__main__':

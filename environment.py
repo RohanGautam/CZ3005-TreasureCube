@@ -20,6 +20,7 @@ class AbstractEnvironment(ABC):
     def step(self, action):
         raise NotImplemented
 
+
 class TreasureCube(AbstractEnvironment):
     def __init__(self, max_step=20):
         super(TreasureCube, self).__init__()
@@ -31,7 +32,8 @@ class TreasureCube(AbstractEnvironment):
         self.visual_state = []
         self.seed = None
         self.set_seed()
-        self.all_actions = ['right', 'left', 'up', 'down', 'forward', 'backward']
+        self.all_actions = ['right', 'left',
+                            'up', 'down', 'forward', 'backward']
         self.slip_actions = dict()
         self.set_action_rules()
 
@@ -129,7 +131,7 @@ class TreasureCube(AbstractEnvironment):
             if self.curr_pos[1] == self.dim - 1:  # wall
                 pass
             elif self.curr_pos[1] == self.dim - 2 and self.curr_pos[0] == self.dim - 1 and self.curr_pos[
-                2] == self.dim - 1:
+                    2] == self.dim - 1:
                 self.curr_pos[1] += 1
                 is_terminate = True
                 reward = 1
@@ -140,7 +142,7 @@ class TreasureCube(AbstractEnvironment):
             if self.curr_pos[0] == self.dim - 1:  # wall
                 pass
             elif self.curr_pos[0] == self.dim - 2 and self.curr_pos[1] == self.dim - 1 and self.curr_pos[
-                2] == self.dim - 1:
+                    2] == self.dim - 1:
                 self.curr_pos[0] += 1
                 is_terminate = True
                 reward = 1
@@ -156,7 +158,7 @@ class TreasureCube(AbstractEnvironment):
             if self.curr_pos[2] == self.dim - 1:  # wall
                 pass
             elif self.curr_pos[2] == self.dim - 2 and self.curr_pos[0] == self.dim - 1 and self.curr_pos[
-                1] == self.dim - 1:
+                    1] == self.dim - 1:
                 self.curr_pos[2] += 1
                 is_terminate = True
                 reward = 1
@@ -189,15 +191,23 @@ class TreasureCube(AbstractEnvironment):
         random.seed(seed)
 
     def _reset_visual_states(self, agent_pos, goal_pos):
-        self.visual_state = [[[self.corridor_sign] * self.dim for _ in range(self.dim)] for _ in range(self.dim)]
-        self.visual_state[agent_pos[0]][agent_pos[1]][agent_pos[2]] = self.agent_sign
-        self.visual_state[goal_pos[0]][goal_pos[1]][goal_pos[2]] = self.goal_sign
+        self.visual_state = [
+            [[self.corridor_sign] * self.dim for _ in range(self.dim)] for _ in range(self.dim)]
+        self.visual_state[agent_pos[0]][agent_pos[1]
+                                        ][agent_pos[2]] = self.agent_sign
+        self.visual_state[goal_pos[0]][goal_pos[1]
+                                       ][goal_pos[2]] = self.goal_sign
 
     def set_action_rules(self):
-        self.slip_actions['right'] = ['up', 'down', 'forward', 'backward', 'right']
-        self.slip_actions['left'] = ['up', 'down', 'forward', 'backward', 'left']
-        self.slip_actions['up'] = ['left', 'right', 'forward', 'backward', 'up']
-        self.slip_actions['down'] = ['left', 'right', 'forward', 'backward', 'down']
-        self.slip_actions['forward'] = ['left', 'right', 'up', 'down', 'forward']
-        self.slip_actions['backward'] = ['left', 'right', 'up', 'down', 'backward']
-
+        self.slip_actions['right'] = [
+            'up', 'down', 'forward', 'backward', 'right']
+        self.slip_actions['left'] = [
+            'up', 'down', 'forward', 'backward', 'left']
+        self.slip_actions['up'] = [
+            'left', 'right', 'forward', 'backward', 'up']
+        self.slip_actions['down'] = [
+            'left', 'right', 'forward', 'backward', 'down']
+        self.slip_actions['forward'] = [
+            'left', 'right', 'up', 'down', 'forward']
+        self.slip_actions['backward'] = [
+            'left', 'right', 'up', 'down', 'backward']
