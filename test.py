@@ -1,16 +1,23 @@
 import argparse
-
 import random
+import matplotlib.pyplot as plt
 
 from environment import TreasureCube
 
 from agents.RandomAgent import RandomAgent
 
 
+def showPlot(X, Y, xlabel, ylabel):
+    plt.plot(X, Y)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.show()
+
+
 def test_cube(max_episode, max_step):
     env = TreasureCube(max_step=max_step)
     agent = RandomAgent()
-
+    episode_rewards = []
     for epsisode_num in range(0, max_episode):
         state = env.reset()
         terminate = False
@@ -21,13 +28,16 @@ def test_cube(max_episode, max_step):
             reward, terminate, next_state = env.step(action)
             episode_reward += reward
             # you can comment the following two lines, if the output is too much
-            env.render()  # comment
-            print(f'step: {t}, action: {action}, reward: {reward}')  # comment
+            # env.render()  # comment
+            # print(f'step: {t}, action: {action}, reward: {reward}')  # comment
             t += 1
             agent.train(state, action, next_state, reward)
             state = next_state
         print(
-            f'epsisode: {epsisode_num}, total_steps: {t} episode reward: {episode_reward}')
+            f'episode: {epsisode_num}, total_steps: {t} episode reward: {episode_reward}')
+        episode_rewards.append(episode_reward)
+    showPlot(list(range(max_episode)), episode_rewards,
+             'episode', 'episode rewards')
 
 
 if __name__ == '__main__':
