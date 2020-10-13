@@ -4,22 +4,7 @@ import random
 
 from environment import TreasureCube
 
-
-# you need to implement your agent based on one RL algorithm
-class RandomAgent(object):
-    def __init__(self):
-        self.action_space = ['left', 'right', 'forward',
-                             'backward', 'up', 'down']  # in TreasureCube
-        self.Q = []
-
-    def take_action(self, state):
-        action = random.choice(self.action_space)
-        return action
-
-    # implement your train/update function to update self.V or self.Q
-    # you should pass arguments to the train function
-    def train(self, state, action, next_state, reward):
-        pass
+from agents.RandomAgent import RandomAgent
 
 
 def test_cube(max_episode, max_step):

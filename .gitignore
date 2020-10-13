@@ -1,2 +1,4 @@
+# workspace folder
 .vscode
-__pycache__
+# ignore all python cache files
+*__pycache__
