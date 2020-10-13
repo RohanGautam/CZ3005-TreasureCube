@@ -25,6 +25,7 @@ def test_cube(max_episode, max_step):
         episode_reward = 0
         while not terminate:
             action = agent.take_action(state)
+            # print(action)
             reward, terminate, next_state = env.step(action)
             episode_reward += reward
             # you can comment the following two lines, if the output is too much
