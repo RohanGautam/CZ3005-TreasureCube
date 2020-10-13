@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 
 from environment import TreasureCube
 from agents.RandomAgent import RandomAgent
+from agents.ValueIterationAgent import ValueIterationAgent
 
 
 def showPlot(X, Y, xlabel, ylabel):
@@ -15,7 +16,7 @@ def showPlot(X, Y, xlabel, ylabel):
 
 def test_cube(max_episode, max_step):
     env = TreasureCube(max_step=max_step)
-    agent = RandomAgent()
+    agent = ValueIterationAgent()
     episode_rewards = []
     for epsisode_num in range(0, max_episode):
         state = env.reset()
