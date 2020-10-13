@@ -1,9 +1,7 @@
 import argparse
-import random
 import matplotlib.pyplot as plt
 
 from environment import TreasureCube
-
 from agents.RandomAgent import RandomAgent
 
 
@@ -11,7 +9,8 @@ def showPlot(X, Y, xlabel, ylabel):
     plt.plot(X, Y)
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
-    plt.show()
+    # plt.show()
+    return plt
 
 
 def test_cube(max_episode, max_step):
@@ -33,17 +32,21 @@ def test_cube(max_episode, max_step):
             t += 1
             agent.train(state, action, next_state, reward)
             state = next_state
-        print(
-            f'episode: {epsisode_num}, total_steps: {t} episode reward: {episode_reward}')
+        # print(
+        #     f'episode: {epsisode_num}, total_steps: {t} episode reward: {episode_reward}')
         episode_rewards.append(episode_reward)
-    showPlot(list(range(max_episode)), episode_rewards,
-             'episode', 'episode rewards')
+
+    return showPlot(list(range(max_episode)), episode_rewards,
+                    'episode', 'episode rewards')
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Test')
-    parser.add_argument('--max_episode', type=int, default=500)
-    parser.add_argument('--max_step', type=int, default=500)
-    args = parser.parse_args()
+test_cube(500, 500)
 
-    test_cube(args.max_episode, args.max_step)
+
+# if __name__ == '__main__':
+#     parser = argparse.ArgumentParser(description='Test')
+#     parser.add_argument('--max_episode', type=int, default=500)
+#     parser.add_argument('--max_step', type=int, default=500)
+#     args = parser.parse_args()
+
+#     test_cube(args.max_episode, args.max_step)
