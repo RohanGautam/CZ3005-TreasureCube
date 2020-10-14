@@ -17,11 +17,12 @@ class ValueIterationAgent(object):
                        for x in cartesianProduct([0, 1, 2, 3], repeat=3)]
         # self.state_num = len(self.states)  # in TreasureCube, 64 coordinates
         # initialise each state as a key with an empty list as the value
-        self.Q = dict(zip(self.states, [[0]]*len(self.states)))
+        # self.Q = dict(zip(self.states, [[0]]*len(self.states)))
+        self.Q = {state: [-1000] for state in self.states}
+        self.V = {state: -1000 for state in self.states}
         # initialise with zeroes
-        self.V = [0] * len(self.states)
-        self.discountFactor = 0.5
-
+        self.discountFactor = 0.9 
+ 
     def getPerpendiculars(self, action: str) -> list:
         return [a for a in self.action_space if a != self.opposites[action] and a != action]
 
@@ -90,13 +91,15 @@ class ValueIterationAgent(object):
         # We need to know the coords of the perpendicular directions..done
 
         # intended
-        current = 0.6 * (reward + self.discountFactor*max(self.Q[next_state]))
+
+        current = 0.6 * (reward + self.discountFactor*self.V[next_state])
         # others (because it can go to perpendicular ones too)
         perpendicular_states = self.getPerpendicularStates(state, action)
-        perp_probabilities = sum([max(self.Q[s])
+        perp_probabilities = sum([0.1*(reward + self.discountFactor*self.V[next_state])
                                   for s in perpendicular_states.keys()])
 
-        self.Q[state].append(current+perp_probabilities)
+        self.Q[state].append(current + perp_probabilities)
+        self.V[state] = max(self.Q[state])
 
 
 def test(test, expected, errMsg, show=False):

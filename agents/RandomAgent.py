@@ -14,5 +14,5 @@ class RandomAgent(object):
     # implement your train/update function to update self.V or self.Q
     # you should pass arguments to the train function
     def train(self, state, action, next_state, reward):
-        print(state, action, next_state, reward)
+        # print(state, action, next_state, reward)
         pass

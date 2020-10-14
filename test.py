@@ -16,6 +16,7 @@ def showPlot(X, Y, xlabel, ylabel):
 
 def test_cube(max_episode, max_step):
     env = TreasureCube(max_step=max_step)
+    # agent = RandomAgent()
     agent = ValueIterationAgent()
     episode_rewards = []
     for epsisode_num in range(0, max_episode):
@@ -34,8 +35,8 @@ def test_cube(max_episode, max_step):
             t += 1
             agent.train(state, action, next_state, reward)
             state = next_state
-        # print(
-        #     f'episode: {epsisode_num}, total_steps: {t} episode reward: {episode_reward}')
+        print(
+            f'episode: {epsisode_num}, total_steps: {t} episode reward: {episode_reward}')
         episode_rewards.append(episode_reward)
 
     return showPlot(list(range(max_episode)), episode_rewards,
