@@ -18,7 +18,7 @@ class ValueIterationAgent(object):
         # self.state_num = len(self.states)  # in TreasureCube, 64 coordinates
         # initialise each state as a key with an empty list as the value
         # self.Q = dict(zip(self.states, [[0]]*len(self.states)))
-        self.Q = {state: [-1000] for state in self.states}
+        # self.Q = {state: [-1000] for state in self.states}
         self.V = {state: 0 for state in self.states}
         # initialise with zeroes
         self.discountFactor = 0.5
@@ -61,8 +61,7 @@ class ValueIterationAgent(object):
 
     def take_action(self, state) -> str:
         '''
-            look all around the state, take the one w the highest probability.
-            Return the *direction* of that state. encode direction in `getSurroundingStates`?
+            return the best action you can take at that state determined by the policy
         '''
         return self.pi.get(state, 'right')
 
@@ -87,20 +86,23 @@ class ValueIterationAgent(object):
             return l
 
         def Q(s, a):
-            return sum(prob*(reward + self.discountFactor*self.V[newState])
-                       for newState, prob, reward in succProbReward(s, a))
+            return sum(prob*(r + self.discountFactor*self.V[newState])
+                       for newState, prob, r in succProbReward(s, a))
 
         isEnd = True if reward == 1 else False
         newV = {}
         actions_at_s = [a for a in self.getPerpendicularActions(action)]
         actions_at_s.append(action)
         for s in self.states:
-            if isEnd:
+            if isEnd and s == state:
                 newV[s] = 0
+                # return
             else:
                 newV[s] = max(Q(s, a) for a in actions_at_s)
+        # update values
+        self.V = newV
 
-        self.pi = {}
+        # choose action that maximises Q at that state
         for s in self.states:
             self.pi[s] = max((Q(s, a), a) for a in actions_at_s)[1]
 
