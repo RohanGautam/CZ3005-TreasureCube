@@ -2,20 +2,12 @@ from itertools import product as cartesianProduct
 import random
 
 
-class ValueIterationAgent(object):
+class QLearningAgent(object):
     def __init__(self):
         self.action_space = ['left', 'right', 'forward',
                              'backward', 'up', 'down']
         self.states = [''.join(map(str, x))
                        for x in cartesianProduct([0, 1, 2, 3], repeat=3)]
-        # values
-        self.V = {state: 0 for state in self.states}
-        # optimal policy, initialized with up
-        self.pi = {state: 'up' for state in self.states}
-        # an empty list, for all state
-        self.V = {state: [] for state in self.states}
-
-        self.discountFactor = 0.9
 
     def take_action(self, state) -> str:
         # pass

@@ -6,6 +6,7 @@ from pprint import pprint
 from environment import TreasureCube
 from agents.RandomAgent import RandomAgent
 from agents.ValueIterationAgent import ValueIterationAgent
+from agents.QLearningAgent import QLearningAgent
 
 
 def showPlot(X, Y, xlabel, ylabel):
@@ -19,7 +20,7 @@ def showPlot(X, Y, xlabel, ylabel):
 def test_cube(max_episode, max_step):
     env = TreasureCube(max_step=max_step)
     # agent = RandomAgent()
-    agent = ValueIterationAgent()
+    agent = QLearningAgent()
     episode_rewards = []
     # for epsisode_num in range(0, max_episode):
     for epsisode_num in tqdm(range(0, max_episode)):
@@ -43,7 +44,6 @@ def test_cube(max_episode, max_step):
         # if episode_reward < -3:
         #     pprint(agent.pi)
         episode_rewards.append(episode_reward)
-    pprint(agent.pi)
     return showPlot(list(range(max_episode)), episode_rewards,
                     'episode', 'episode rewards')
 
