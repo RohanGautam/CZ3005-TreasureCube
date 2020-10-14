@@ -24,7 +24,7 @@ class ValueIterationAgent(object):
         self.discountFactor = 0.5
         self.pi = {}
 
-    def getPerpendiculars(self, action: str) -> list:
+    def getPerpendicularActions(self, action: str) -> list:
         return [a for a in self.action_space if a != self.opposites[action] and a != action]
 
     def getSurroundingStates(self, state: str, directions: list) -> dict:
@@ -54,7 +54,7 @@ class ValueIterationAgent(object):
         return totalStates
 
     def getPerpendicularStates(self, state: str, action: str) -> dict:
-        return self.getSurroundingStates(state, self.getPerpendiculars(action))
+        return self.getSurroundingStates(state, self.getPerpendicularActions(action))
 
     def getAllStatesSurrounding(self, state: str) -> dict:
         return self.getSurroundingStates(state, self.action_space)
@@ -65,14 +65,6 @@ class ValueIterationAgent(object):
             Return the *direction* of that state. encode direction in `getSurroundingStates`?
         '''
         return self.pi.get(state, 'right')
-        # pi = {}
-        # for s in self.states:
-        #     pi[s] = max()
-        # surrounding = self.getAllStatesSurrounding(state)
-        # state_subset = dict(
-        #     (k, self.Q[k]) for k in surrounding.keys() if k in self.Q)
-        # return surrounding[max(state_subset.keys(),
-        #                        key=lambda x: max(state_subset[x]))]
 
     # implement your train/update function to update self.V or self.Q
     # you should pass arguments to the train function
@@ -100,7 +92,7 @@ class ValueIterationAgent(object):
 
         isEnd = True if reward == 1 else False
         newV = {}
-        actions_at_s = [a for a in self.getPerpendiculars(action)]
+        actions_at_s = [a for a in self.getPerpendicularActions(action)]
         actions_at_s.append(action)
         for s in self.states:
             if isEnd:
@@ -111,26 +103,6 @@ class ValueIterationAgent(object):
         self.pi = {}
         for s in self.states:
             self.pi[s] = max((Q(s, a), a) for a in actions_at_s)[1]
-        # print()
-        # find the tranisition fn(s) for the current state move.
-        # remember, it's nondeterministic so it might not always happen
-
-        # We have transition probabilities (0.1 for perpendicular states)
-        # We have discount factor
-        # We know reward (-0.1), passed to us
-        # we can get expected rewards from V0, my max(Q) at that coord
-        # We need to know the coords of the perpendicular directions..done
-
-        # intended
-
-        # current = 0.6 * (reward + self.discountFactor*self.V[next_state])
-        # # others (because it can go to perpendicular ones too)
-        # perpendicular_states = self.getPerpendicularStates(state, action)
-        # perp_probabilities = sum([0.1*(reward + self.discountFactor*self.V[next_state])
-        #                           for s in perpendicular_states.keys()])
-
-        # self.Q[state].append(current + perp_probabilities)
-        # self.V[state] = max(self.Q[state])
 
 
 def test(test, expected, errMsg, show=False):
@@ -149,7 +121,7 @@ if __name__ == '__main__':
     test(len(agent.states), 64,
          "[test] invalid number of states", show=showLogs)
     # getPerpendiculars
-    test(agent.getPerpendiculars('left'), [
+    test(agent.getPerpendicularActions('left'), [
          'forward', 'backward', 'up', 'down'], "[test] wrong perpendiculars", show=showLogs)
     # getPerpendicularStates
     test(sorted(agent.getPerpendicularStates('000', 'left').keys()), sorted(
