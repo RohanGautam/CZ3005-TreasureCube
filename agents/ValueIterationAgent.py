@@ -54,10 +54,40 @@ class ValueIterationAgent(object):
         return totalStates
 
     def getPerpendicularStates(self, state: str, action: str) -> dict:
-        return self.getSurroundingStates(state, self.getPerpendicularActions(action))
+        states = self.getSurroundingStates(
+            state, self.getPerpendicularActions(action))
+        # if len(states) < 4:
+        #     # if cant go to any other state, will remain in the same place.
+        #     # this is to model that
+        #     states[state] = None  # placeholder, not used in calc
+        return states
 
     def getAllStatesSurrounding(self, state: str) -> dict:
         return self.getSurroundingStates(state, self.action_space)
+
+    # def actionOutcome(self, s: str, a: str) -> str:
+    #     org = s
+    #     s = list(map(int, s))
+    #     # y axis modified
+    #     if a == 'left':
+    #         s[1] -= 1
+    #     elif a == 'right':
+    #         s[1] += 1
+    #     # z axis modified
+    #     elif a == 'up':
+    #         s[2] += 1
+    #     elif a == 'down':
+    #         s[2] -= 1
+    #     # x axis modified
+    #     elif a == 'forward':
+    #         s[0] += 1
+    #     elif a == 'backward':
+    #         s[0] -= 1
+
+    #     if all([0 <= i <= 3 for i in s]):
+    #         return ''.join(map(str, s))
+    #     else:
+    #         return org
 
     def take_action(self, state) -> str:
         '''
@@ -76,16 +106,25 @@ class ValueIterationAgent(object):
         @param `next_state` : A string of length 3 containing the coordinates for the next state, eg: "000", "121"\n
         @param `reward` : An integer representing the reward during transition from `state` to `next_state`, eg: -0.1
         '''
-        def succProbReward(s, a):
+
+        def succProbReward(s: str, a: str) -> tuple:
             # returns (newState, prob, reward)[]
             # for other actions it can take
             other_states_can_reach = self.getPerpendicularStates(s, a)
             l = [(s, 0.1, reward) for s in other_states_can_reach]
+            # other_actions = self.getPerpendicularActions(a)
+            # l = [(self.actionOutcome(s, i), 0.1, reward)
+            #      for i in other_actions]
             # for intended actions
             l.append((next_state, 0.6, reward))
             return l
+            # if a == action:  # intended action
+            #     return (next_state, 0.6, reward)
+            # else:
+            #     outcome = actionOutcome(s, a)
+            #     return (outcome, 0.1, reward)
 
-        def Q(s, a):
+        def Q(s: str, a: str) -> int:
             return sum(prob*(r + self.discountFactor*self.V[newState])
                        for newState, prob, r in succProbReward(s, a))
 

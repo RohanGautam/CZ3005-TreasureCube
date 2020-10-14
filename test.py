@@ -21,8 +21,8 @@ def test_cube(max_episode, max_step):
     # agent = RandomAgent()
     agent = ValueIterationAgent()
     episode_rewards = []
+    # for epsisode_num in range(0, max_episode):
     for epsisode_num in tqdm(range(0, max_episode)):
-        # for epsisode_num in range(0, max_episode):
         state = env.reset()
         terminate = False
         t = 0
@@ -48,7 +48,7 @@ def test_cube(max_episode, max_step):
                     'episode', 'episode rewards')
 
 
-test_cube(100, 500)
+test_cube(500, 500)
 
 
 # if __name__ == '__main__':
