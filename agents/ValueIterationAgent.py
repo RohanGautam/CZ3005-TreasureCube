@@ -19,10 +19,11 @@ class ValueIterationAgent(object):
         # initialise each state as a key with an empty list as the value
         # self.Q = dict(zip(self.states, [[0]]*len(self.states)))
         self.Q = {state: [-1000] for state in self.states}
-        self.V = {state: -1000 for state in self.states}
+        self.V = {state: 0 for state in self.states}
         # initialise with zeroes
-        self.discountFactor = 0.9 
- 
+        self.discountFactor = 0.5
+        self.pi = {}
+
     def getPerpendiculars(self, action: str) -> list:
         return [a for a in self.action_space if a != self.opposites[action] and a != action]
 
@@ -63,16 +64,19 @@ class ValueIterationAgent(object):
             look all around the state, take the one w the highest probability.
             Return the *direction* of that state. encode direction in `getSurroundingStates`?
         '''
-        surrounding = self.getAllStatesSurrounding(state)
-        state_subset = dict(
-            (k, self.Q[k]) for k in surrounding.keys() if k in self.Q)
-        return surrounding[max(state_subset.keys(),
-                               key=lambda x: max(state_subset[x]))]
+        return self.pi.get(state, 'right')
+        # pi = {}
+        # for s in self.states:
+        #     pi[s] = max()
+        # surrounding = self.getAllStatesSurrounding(state)
+        # state_subset = dict(
+        #     (k, self.Q[k]) for k in surrounding.keys() if k in self.Q)
+        # return surrounding[max(state_subset.keys(),
+        #                        key=lambda x: max(state_subset[x]))]
 
     # implement your train/update function to update self.V or self.Q
     # you should pass arguments to the train function
     # stronger typing for clarity
-
     def train(self, state: str, action: str, next_state: str, reward: int) -> None:
         '''
         Train the agent.\n
@@ -81,6 +85,33 @@ class ValueIterationAgent(object):
         @param `next_state` : A string of length 3 containing the coordinates for the next state, eg: "000", "121"\n
         @param `reward` : An integer representing the reward during transition from `state` to `next_state`, eg: -0.1
         '''
+        def succProbReward(s, a):
+            # returns (newState, prob, reward)[]
+            # for other actions it can take
+            other_states_can_reach = self.getPerpendicularStates(s, a)
+            l = [(s, 0.1, reward) for s in other_states_can_reach]
+            # for intended actions
+            l.append((next_state, 0.6, reward))
+            return l
+
+        def Q(s, a):
+            return sum(prob*(reward + self.discountFactor*self.V[newState])
+                       for newState, prob, reward in succProbReward(s, a))
+
+        isEnd = True if reward == 1 else False
+        newV = {}
+        actions_at_s = [a for a in self.getPerpendiculars(action)]
+        actions_at_s.append(action)
+        for s in self.states:
+            if isEnd:
+                newV[s] = 0
+            else:
+                newV[s] = max(Q(s, a) for a in actions_at_s)
+
+        self.pi = {}
+        for s in self.states:
+            self.pi[s] = max((Q(s, a), a) for a in actions_at_s)[1]
+        # print()
         # find the tranisition fn(s) for the current state move.
         # remember, it's nondeterministic so it might not always happen
 
@@ -92,14 +123,14 @@ class ValueIterationAgent(object):
 
         # intended
 
-        current = 0.6 * (reward + self.discountFactor*self.V[next_state])
-        # others (because it can go to perpendicular ones too)
-        perpendicular_states = self.getPerpendicularStates(state, action)
-        perp_probabilities = sum([0.1*(reward + self.discountFactor*self.V[next_state])
-                                  for s in perpendicular_states.keys()])
+        # current = 0.6 * (reward + self.discountFactor*self.V[next_state])
+        # # others (because it can go to perpendicular ones too)
+        # perpendicular_states = self.getPerpendicularStates(state, action)
+        # perp_probabilities = sum([0.1*(reward + self.discountFactor*self.V[next_state])
+        #                           for s in perpendicular_states.keys()])
 
-        self.Q[state].append(current + perp_probabilities)
-        self.V[state] = max(self.Q[state])
+        # self.Q[state].append(current + perp_probabilities)
+        # self.V[state] = max(self.Q[state])
 
 
 def test(test, expected, errMsg, show=False):
