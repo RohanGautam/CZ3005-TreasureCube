@@ -17,3 +17,7 @@
 # plan (technical)
 
 - make `abstractions/` folder so you can try out both mdp and rl (value iteration and Q-learning)
+
+# references
+
+- [Q learning, medium](https://towardsdatascience.com/simple-reinforcement-learning-q-learning-fcddc4b6fe56)

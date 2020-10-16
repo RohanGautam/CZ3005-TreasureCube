@@ -44,6 +44,7 @@ def test_cube(max_episode, max_step):
         # if episode_reward < -3:
         #     pprint(agent.pi)
         episode_rewards.append(episode_reward)
+    print(agent.getQTable())
     return showPlot(list(range(max_episode)), episode_rewards,
                     'episode', 'episode rewards')
 

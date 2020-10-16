@@ -1,5 +1,6 @@
 from itertools import product as cartesianProduct
 import random
+import pandas as pd
 
 
 class QLearningAgent(object):
@@ -28,6 +29,12 @@ class QLearningAgent(object):
         # controls random exploration. not used here, as it is modelled in the
         # fact that state transition doesnt always go in the intended direction
         # self.epsilon = 0.2
+
+    def getQTable(self):
+        """
+        Return the Q table as a pandas dataframe
+        """
+        return pd.DataFrame(self.Q, index=self.action_space)
 
     def take_action(self, state) -> str:
         return self.index_action[self.Q[state].index(max(self.Q[state]))]
