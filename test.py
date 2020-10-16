@@ -22,8 +22,8 @@ def test_cube(max_episode, max_step):
     # agent = RandomAgent()
     agent = QLearningAgent()
     episode_rewards = []
-    # for epsisode_num in tqdm(range(0, max_episode)):
-    for epsisode_num in range(0, max_episode):
+    # for epsisode_num in range(0, max_episode):
+    for epsisode_num in tqdm(range(0, max_episode)):
         state = env.reset()
         terminate = False
         t = 0

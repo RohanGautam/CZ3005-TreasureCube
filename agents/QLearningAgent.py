@@ -20,8 +20,8 @@ class QLearningAgent(object):
         self.index_action = {i: a for i, a in enumerate(self.action_space)}
         self.Q = {state: [0]*len(self.action_space) for state in self.states}
         self.gamma = 0.9
-        self.alpha = 0.01
-        self.epsilon = 0.2
+        self.alpha = 0.5
+        self.epsilon = 0.2  # controls random exploration
 
     def getPerpendicularActions(self, action: str) -> list:
         return [a for a in self.action_space if a != self.opposites[action] and a != action]
@@ -86,12 +86,13 @@ class QLearningAgent(object):
             return org
 
     def take_action(self, state) -> str:
+        # maybe dont randomly explore, as that is modelled by the next_state being pseudo-random
         # randomly explore 20% of the time
         # if random.uniform(0, 1) < self.epsilon:
         #     return random.choice(self.action_space)
         # else:
+        #     return self.index_action[self.Q[state].index(max(self.Q[state]))]
         return self.index_action[self.Q[state].index(max(self.Q[state]))]
-        # return self.index_action[self.Q[state].index(max(self.Q[state]))]
 
     # implement your train/update function to update self.V or self.Q
     # you should pass arguments to the train function
@@ -106,11 +107,11 @@ class QLearningAgent(object):
         #     print('reward!')
 
         # only if it moves as intended
-        if self.actionOutcome(state, action) == next_state:
-            Qold = self.Q[state][self.action_index[action]]
-            self.Q[state][self.action_index[action]] = \
-                Qold + \
-                self.alpha * \
-                (reward + self.gamma*(max(self.Q[next_state])) - Qold)
+        # if self.actionOutcome(state, action) == next_state:
+        Qold = self.Q[state][self.action_index[action]]
+        self.Q[state][self.action_index[action]] = \
+            Qold + \
+            self.alpha * \
+            (reward + self.gamma*(max(self.Q[next_state])) - Qold)
 
         print('', end='')
