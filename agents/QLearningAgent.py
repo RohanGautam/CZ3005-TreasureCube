@@ -7,14 +7,6 @@ class QLearningAgent(object):
     def __init__(self):
         self.action_space = ['right', 'left', 'forward',
                              'backward', 'up', 'down']
-        self.opposites = {
-            'left': 'right',
-            'right': 'left',
-            'forward': 'backward',
-            'backward': 'forward',
-            'up': 'down',
-            'down': 'up',
-        }
         self.states = [''.join(map(str, x))
                        for x in cartesianProduct([0, 1, 2, 3], repeat=3)]
         self.action_index = {a: i for i, a in enumerate(self.action_space)}
