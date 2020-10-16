@@ -48,7 +48,7 @@ def test_cube(max_episode, max_step):
                     'episode', 'episode rewards')
 
 
-test_cube(500, 500)
+test_cube(1000, 500)
 
 
 # if __name__ == '__main__':
