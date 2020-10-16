@@ -5,7 +5,7 @@ from pprint import pprint
 
 from environment import TreasureCube
 from agents.RandomAgent import RandomAgent
-from agents.ValueIterationAgent import ValueIterationAgent
+# from agents.ValueIterationAgent import ValueIterationAgent
 from agents.QLearningAgent import QLearningAgent
 
 
@@ -18,7 +18,6 @@ def showPlot(X, Y, xlabel, ylabel):
 
 def test_cube(max_episode, max_step):
     env = TreasureCube(max_step=max_step)
-    # agent = RandomAgent()
     agent = QLearningAgent()
     episode_rewards = []
     for epsisode_num in range(0, max_episode):
@@ -28,7 +27,6 @@ def test_cube(max_episode, max_step):
         episode_reward = 0
         while not terminate:
             action = agent.take_action(state)
-            # print(action)
             reward, terminate, next_state = env.step(action)
             episode_reward += reward
             # you can comment the following two lines, if the output is too much
