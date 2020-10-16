@@ -66,15 +66,14 @@ class QLearningAgent(object):
 
     def take_action(self, state) -> str:
         return self.index_action[self.Q[state].index(max(self.Q[state]))]
-        # pass
-        # return random.choice(self.action_space)
-        # action000
 
     # implement your train/update function to update self.V or self.Q
     # you should pass arguments to the train function
     def train(self, state: str, action: str, next_state: str, reward: int) -> None:
-        # `next_state` might not always be a result of `action` on `state`
-        #  `next_state` is tied to `reward`
+        '''
+        `next_state` might not always be a result of `action` on `state`.\n
+        `reward` is tied to `next_state`       
+        '''
         # calculate Q:
         # Q(S,A) = self.Q[state][self.action_index[action]]
         # if reward == 1:
