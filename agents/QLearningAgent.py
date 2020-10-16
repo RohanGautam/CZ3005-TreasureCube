@@ -21,6 +21,7 @@ class QLearningAgent(object):
         self.Q = {state: [0]*len(self.action_space) for state in self.states}
         self.gamma = 0.9
         self.alpha = 0.01
+        self.epsilon = 0.2
 
     def getPerpendicularActions(self, action: str) -> list:
         return [a for a in self.action_space if a != self.opposites[action] and a != action]
@@ -60,12 +61,37 @@ class QLearningAgent(object):
         else:
             return -0.1
 
-    def actualAction(self, state1: str, state2: str):
-        s1 = list(map(int, state1))
-        s2 = list(map(int, state2))
+    def actionOutcome(self, state: str, action: str) -> str:
+        org = state
+        state = list(map(int, state))
+        # y axis modified
+        if action == 'left':
+            state[1] -= 1
+        elif action == 'right':
+            state[1] += 1
+        # z axis modified
+        elif action == 'up':
+            state[2] += 1
+        elif action == 'down':
+            state[2] -= 1
+        # x axis modified
+        elif action == 'forward':
+            state[0] += 1
+        elif action == 'backward':
+            state[0] -= 1
+
+        if all([0 <= i <= 3 for i in state]):
+            return ''.join(map(str, state))
+        else:
+            return org
 
     def take_action(self, state) -> str:
+        # randomly explore 20% of the time
+        # if random.uniform(0, 1) < self.epsilon:
+        #     return random.choice(self.action_space)
+        # else:
         return self.index_action[self.Q[state].index(max(self.Q[state]))]
+        # return self.index_action[self.Q[state].index(max(self.Q[state]))]
 
     # implement your train/update function to update self.V or self.Q
     # you should pass arguments to the train function
@@ -78,9 +104,13 @@ class QLearningAgent(object):
         # Q(S,A) = self.Q[state][self.action_index[action]]
         # if reward == 1:
         #     print('reward!')
-        Qold = self.Q[state][self.action_index[action]]
-        self.Q[state][self.action_index[action]] = \
-            Qold + \
-            self.alpha * \
-            (reward + self.gamma*(self.maxRewardOnAction(next_state)) - Qold)
+
+        # only if it moves as intended
+        if self.actionOutcome(state, action) == next_state:
+            Qold = self.Q[state][self.action_index[action]]
+            self.Q[state][self.action_index[action]] = \
+                Qold + \
+                self.alpha * \
+                (reward + self.gamma*(max(self.Q[next_state])) - Qold)
+
         print('', end='')
