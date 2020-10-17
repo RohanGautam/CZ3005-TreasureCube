@@ -1,22 +1,12 @@
-# aims
+# Treasure cube
 
-## base
+A Q-learning approach to reinforcement learning to solve the Treasure cube environment.
 
-- make a RL algorithm.
-- plot learning progress
-- show final
-  - value table [if value iteration]
-  - Q table [if Q learning]
+# Organisation
 
-## personal
+The agents are organizes in the `agents/` directory. It contains a `RandomAgent`(default) and a `QLearningAgent` (implemented by me). The directory is a submodule, and it's imported in both the test script and the notebook.
 
-- well documented
-- good abstractions (parent classes, etc), wherever possible
-- good use of public and private methods
-
-# plan (technical)
-
-- make `abstractions/` folder so you can try out both mdp and rl (value iteration and Q-learning)
+Suggested: use the notebook for easier visualisation viewing.
 
 # references
 
