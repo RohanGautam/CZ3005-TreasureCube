@@ -16,7 +16,7 @@ class QLearningAgent(object):
         # how important we should consider future rewards(very)
         self.gamma = 0.9
         # learning rate
-        self.alpha = 0.5
+        self.alpha = 0.3
 
         # controls random exploration. not used here, as it is modelled in the
         # fact that state transition doesnt always go in the intended direction

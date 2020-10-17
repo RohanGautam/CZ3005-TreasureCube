@@ -1,4 +1,5 @@
 from itertools import product as cartesianProduct
+import random
 
 
 from environment import TreasureCube
@@ -25,9 +26,10 @@ class ValueIterationAgent(object):
         # self.Q = dict(zip(self.states, [[0]]*len(self.states)))
         # self.Q = {state: [-1000] for state in self.states}
         self.V = {state: 0 for state in self.states}
-        # initialise with zeroes
-        self.discountFactor = 0.5
-        self.pi = {}
+        self.discountFactor = 0.9
+        # initialize pi randomly
+        self.pi = {state: random.choice(self.action_space)
+                   for state in self.states}
 
     def getPerpendicularActions(self, action: str) -> list:
         return [a for a in self.action_space if a != self.opposites[action] and a != action]
@@ -70,29 +72,29 @@ class ValueIterationAgent(object):
     def getAllStatesSurrounding(self, state: str) -> dict:
         return self.getSurroundingStates(state, self.action_space)
 
-    # def actionOutcome(self, s: str, a: str) -> str:
-    #     org = s
-    #     s = list(map(int, s))
-    #     # y axis modified
-    #     if a == 'left':
-    #         s[1] -= 1
-    #     elif a == 'right':
-    #         s[1] += 1
-    #     # z axis modified
-    #     elif a == 'up':
-    #         s[2] += 1
-    #     elif a == 'down':
-    #         s[2] -= 1
-    #     # x axis modified
-    #     elif a == 'forward':
-    #         s[0] += 1
-    #     elif a == 'backward':
-    #         s[0] -= 1
+    def actionOutcome(self, s: str, a: str) -> str:
+        org = s
+        s = list(map(int, s))
+        # y axis modified
+        if a == 'left':
+            s[1] -= 1
+        elif a == 'right':
+            s[1] += 1
+        # z axis modified
+        elif a == 'up':
+            s[2] += 1
+        elif a == 'down':
+            s[2] -= 1
+        # x axis modified
+        elif a == 'forward':
+            s[0] += 1
+        elif a == 'backward':
+            s[0] -= 1
 
-    #     if all([0 <= i <= 3 for i in s]):
-    #         return ''.join(map(str, s))
-    #     else:
-    #         return org
+        if all([0 <= i <= 3 for i in s]):
+            return ''.join(map(str, s))
+        else:
+            return org
 
     def take_action(self, state) -> str:
         '''
@@ -111,43 +113,48 @@ class ValueIterationAgent(object):
         @param `next_state` : A string of length 3 containing the coordinates for the next state, eg: "000", "121"\n
         @param `reward` : An integer representing the reward during transition from `state` to `next_state`, eg: -0.1
         '''
+        prob = 0.6 if self.actionOutcome(state, action) == next_state else 0.1
+        Vold = self.V[state]
+        Q = prob * (reward + self.discountFactor * (self.V[next_state]))
+        self.V[state] = Q
+        piOld = self.pi[state]
+        self.pi[state] = action
+        # def succProbReward(s: str, a: str) -> tuple:
+        #     # returns (newState, prob, reward)[]
+        #     # for other actions it can take
+        #     other_states_can_reach = self.getPerpendicularStates(s, a)
+        #     l = [(s, 0.1, reward) for s in other_states_can_reach]
+        #     # other_actions = self.getPerpendicularActions(a)
+        #     # l = [(self.actionOutcome(s, i), 0.1, reward)
+        #     #      for i in other_actions]
+        #     # for intended actions
+        #     l.append((next_state, 0.6, reward))
+        #     return l
+        #     # if a == action:  # intended action
+        #     #     return (next_state, 0.6, reward)
+        #     # else:
+        #     #     outcome = actionOutcome(s, a)
+        #     #     return (outcome, 0.1, reward)
 
-        def succProbReward(s: str, a: str) -> tuple:
-            # returns (newState, prob, reward)[]
-            # for other actions it can take
-            other_states_can_reach = self.getPerpendicularStates(s, a)
-            l = [(s, 0.1, reward) for s in other_states_can_reach]
-            # other_actions = self.getPerpendicularActions(a)
-            # l = [(self.actionOutcome(s, i), 0.1, reward)
-            #      for i in other_actions]
-            # for intended actions
-            l.append((next_state, 0.6, reward))
-            return l
-            # if a == action:  # intended action
-            #     return (next_state, 0.6, reward)
-            # else:
-            #     outcome = actionOutcome(s, a)
-            #     return (outcome, 0.1, reward)
+        # def Q(s: str, a: str) -> int:
+        #     return sum(prob*(r + self.discountFactor*self.V[newState])
+        #                for newState, prob, r in succProbReward(s, a))
 
-        def Q(s: str, a: str) -> int:
-            return sum(prob*(r + self.discountFactor*self.V[newState])
-                       for newState, prob, r in succProbReward(s, a))
+        # isEnd = True if reward == 1 else False
+        # newV = {}
+        # actions_at_s = [a for a in self.getPerpendicularActions(action)]
+        # actions_at_s.append(action)
+        # for s in self.states:
+        #     if isEnd and s == state:
+        #         newV[s] = 0
+        #         # return
+        #     else:
+        #         newV[s] = max(Q(s, a) for a in actions_at_s)
+        # # update values
+        # self.V = newV
 
-        isEnd = True if reward == 1 else False
-        newV = {}
-        actions_at_s = [a for a in self.getPerpendicularActions(action)]
-        actions_at_s.append(action)
-        for s in self.states:
-            if isEnd and s == state:
-                newV[s] = 0
-                # return
-            else:
-                newV[s] = max(Q(s, a) for a in actions_at_s)
-        # update values
-        self.V = newV
-
-        for s in self.states:
-            self.pi[s] = max((Q(s, a), a) for a in actions_at_s)[1]
+        # for s in self.states:
+        #     self.pi[s] = max((Q(s, a), a) for a in actions_at_s)[1]
 
 
 def test(test, expected, errMsg, show=False):
