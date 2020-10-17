@@ -14,13 +14,11 @@ class QLearningAgent(object):
         self.Q = {state: [0] * len(self.action_space) for state in self.states}
 
         # how important we should consider future rewards(very)
-        self.gamma = 0.9
+        self.gamma = 0.99
         # learning rate
-        self.alpha = 0.3
-
-        # controls random exploration. not used here, as it is modelled in the
-        # fact that state transition doesnt always go in the intended direction
-        # self.epsilon = 0.2
+        self.alpha = 0.5
+        # controls random exploration.
+        self.epsilon = 0.01
 
     def getQTable(self):
         """
@@ -33,13 +31,14 @@ class QLearningAgent(object):
     def take_action(self, state) -> str:
         '''
         At a particular state, return the action having the highest Q value.
+        Or, with a 1% chance, randomly explore.
         '''
-        return self.index_action[self.Q[state].index(max(self.Q[state]))]
-        # randomly explore `self.epsilon` * 100 of the time
-        # if random.uniform(0, 1) < self.epsilon:
-        #     return random.choice(self.action_space)
-        # else:
-        #     return self.index_action[self.Q[state].index(max(self.Q[state]))]
+        # return self.index_action[self.Q[state].index(max(self.Q[state]))]
+        # randomly explore `self.epsilon` * 100 % of the time
+        if random.uniform(0, 1) < self.epsilon:
+            return random.choice(self.action_space)
+        else:
+            return self.index_action[self.Q[state].index(max(self.Q[state]))]
 
     def train(self, state: str, action: str, next_state: str, reward: int) -> None:
         '''
