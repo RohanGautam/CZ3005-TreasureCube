@@ -10,4 +10,4 @@ Suggested: use the notebook for easier visualisation viewing.
 
 # references
 
-- [Q learning, medium](https://towardsdatascience.com/simple-reinforcement-learning-q-learning-fcddc4b6fe56)
+- [Q learning on medium](https://towardsdatascience.com/simple-reinforcement-learning-q-learning-fcddc4b6fe56)
