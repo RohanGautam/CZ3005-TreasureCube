@@ -26,7 +26,9 @@ class QLearningAgent(object):
         """
         Return the Q table as a pandas dataframe
         """
-        return pd.DataFrame(self.Q, index=self.action_space)
+        d = {action: [self.Q[s][self.action_index[action]] for s in self.states]
+             for action in self.action_space}
+        return pd.DataFrame(d, index=self.states)
 
     def take_action(self, state) -> str:
         return self.index_action[self.Q[state].index(max(self.Q[state]))]
