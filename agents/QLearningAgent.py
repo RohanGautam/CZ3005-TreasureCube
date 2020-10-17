@@ -31,6 +31,9 @@ class QLearningAgent(object):
         return pd.DataFrame(d, index=self.states)
 
     def take_action(self, state) -> str:
+        '''
+        At a particular state, return the action having the highest Q value.
+        '''
         return self.index_action[self.Q[state].index(max(self.Q[state]))]
         # randomly explore `self.epsilon` * 100 of the time
         # if random.uniform(0, 1) < self.epsilon:
