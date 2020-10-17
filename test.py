@@ -5,7 +5,6 @@ from pprint import pprint
 
 from environment import TreasureCube
 from agents.RandomAgent import RandomAgent
-# from agents.ValueIterationAgent import ValueIterationAgent
 from agents.QLearningAgent import QLearningAgent
 
 
