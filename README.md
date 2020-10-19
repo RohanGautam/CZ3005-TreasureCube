@@ -6,7 +6,7 @@ A Q-learning approach to reinforcement learning to solve the Treasure cube envir
 
 # Organisation
 
-The agents are organizes in the `agents/` directory. It contains a `RandomAgent`(default) and a `QLearningAgent` (implemented by me). The directory is a submodule, and it's imported in both the test script and the notebook.
+The agents are organized in the `agents/` directory. It contains a `RandomAgent`(default) and a `QLearningAgent` (implemented by me). The directory is a submodule, and it's imported in both the test script and the notebook.
 
 Suggested: use the notebook for easier visualisation viewing.
 
